@@ -53,6 +53,43 @@ namespace RealityLog.FileOperations
         /// </summary>
         public void MoveToDownloads(string directoryName)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.ExternalStorageWrite))
+            {
+                // Request permission with callback
+                var callbacks = new UnityEngine.Android.PermissionCallbacks();
+                callbacks.PermissionGranted += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        ExecuteMoveToDownloads(directoryName);
+                    }
+                };
+                callbacks.PermissionDenied += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        OnOperationComplete?.Invoke("MoveToDownloads", false, "Permission denied. Cannot move to Downloads.");
+                    }
+                };
+                callbacks.PermissionDeniedAndDontAskAgain += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        OnOperationComplete?.Invoke("MoveToDownloads", false, "Permission denied permanently. Please enable in app settings.");
+                    }
+                };
+                
+                UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.ExternalStorageWrite, callbacks);
+                return;
+            }
+#endif
+            // Permission already granted, execute move directly
+            ExecuteMoveToDownloads(directoryName);
+        }
+
+        private void ExecuteMoveToDownloads(string directoryName)
+        {
             try
             {
                 string sourcePath = Path.Join(Application.persistentDataPath, directoryName);
@@ -107,6 +144,38 @@ namespace RealityLog.FileOperations
         /// </summary>
         public void ExportRecordingAsync(string directoryName)
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.ExternalStorageWrite))
+            {
+                // Request permission with callback
+                var callbacks = new UnityEngine.Android.PermissionCallbacks();
+                callbacks.PermissionGranted += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        StartCoroutine(CompressCoroutine(directoryName, true));
+                    }
+                };
+                callbacks.PermissionDenied += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        OnOperationComplete?.Invoke("Export", false, "Permission denied. Cannot export to Downloads.");
+                    }
+                };
+                callbacks.PermissionDeniedAndDontAskAgain += (string permission) =>
+                {
+                    if (permission == UnityEngine.Android.Permission.ExternalStorageWrite)
+                    {
+                        OnOperationComplete?.Invoke("Export", false, "Permission denied permanently. Please enable in app settings.");
+                    }
+                };
+                
+                UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.ExternalStorageWrite, callbacks);
+                return;
+            }
+#endif
+            // Permission already granted, execute export directly
             StartCoroutine(CompressCoroutine(directoryName, true));
         }
 
@@ -114,7 +183,7 @@ namespace RealityLog.FileOperations
         {
             string operationName = isExport ? "Export" : "Compress";
             string sourcePath = Path.Join(Application.persistentDataPath, directoryName);
-            string zipName = $"{directoryName}.qscan";
+            string zipName = $"{directoryName}.zip";
             string zipPath = Path.Join(Application.persistentDataPath, zipName);
 
             // Enable runInBackground to ensure operation continues if headset is removed
@@ -222,14 +291,14 @@ namespace RealityLog.FileOperations
                         {
                             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                             string zipNameWithoutExt = Path.GetFileNameWithoutExtension(zipName);
-                            destZipPath = Path.Join(downloadsBasePath, $"{zipNameWithoutExt}_{timestamp}.qscan");
+                            destZipPath = Path.Join(downloadsBasePath, $"{zipNameWithoutExt}_{timestamp}.zip");
                         }
 
                         // Move zip to downloads
                         File.Move(zipPath, destZipPath);
                         
                         Debug.Log($"[{Constants.LOG_TAG}] RecordingOperations: Exported {directoryName} to {destZipPath}");
-                        OnOperationComplete?.Invoke("Export", true, $"Exported to Downloads: {Path.GetFileName(destZipPath)}");
+                        OnOperationComplete?.Invoke("Export", true, $"Exported to Downloads: {Path.GetFileName(destZipPath)}. You may need to restart your headset to see the zip file show up in the Downloads folder.");
                     }
                     catch (Exception e)
                     {
@@ -240,7 +309,7 @@ namespace RealityLog.FileOperations
                 else
                 {
                     Debug.Log($"[{Constants.LOG_TAG}] RecordingOperations: Compressed {directoryName} to {zipPath}");
-                    OnOperationComplete?.Invoke("Compress", true, $"Compressed to {directoryName}.qscan");
+                    OnOperationComplete?.Invoke("Compress", true, $"Compressed to {directoryName}.zip");
                 }
             }
             finally
