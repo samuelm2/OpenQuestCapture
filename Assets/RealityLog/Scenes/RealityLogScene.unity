@@ -718,6 +718,7 @@ GameObject:
   - component: {fileID: 1546513619}
   - component: {fileID: 1546513618}
   - component: {fileID: 1546513621}
+  - component: {fileID: 1546513625}
   m_Layer: 0
   m_Name: RecordingMenuPanel
   m_TagString: Untagged
@@ -1764,7 +1765,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: RealityLog.UI::RealityLog.UI.RecordingMenuController
   menuPanel: {fileID: 330503377}
   menuPositioner: {fileID: 1929108984}
-  menuRaycaster: {fileID: 1929108981}
   toggleButton: 8
   controller: -1
 --- !u!114 &730769974
@@ -3502,6 +3502,18 @@ MonoBehaviour:
   _selectSurface: {fileID: 730769979}
   _movementProvider: {fileID: 0}
   _tiebreakerScore: 0
+--- !u!225 &1546513625
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330503377}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1550360847
 GameObject:
   m_ObjectHideFlags: 0

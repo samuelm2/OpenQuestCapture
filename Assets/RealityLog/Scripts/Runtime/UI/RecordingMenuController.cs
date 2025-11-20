@@ -27,11 +27,20 @@ namespace RealityLog.UI
 
         private bool isMenuVisible = false;
 
+        private CanvasGroup? menuCanvasGroup;
+
         private void Start()
         {
             if (menuPanel != null)
             {
-                menuPanel.SetActive(false);
+                // Ensure we have a CanvasGroup
+                menuCanvasGroup = menuPanel.GetComponent<CanvasGroup>();
+
+                // Ensure the GameObject is active so Oculus tracker works
+                menuPanel.SetActive(true);
+                
+                // Initialize state (hidden)
+                UpdateMenuVisibility();
             }
         }
 
@@ -52,11 +61,11 @@ namespace RealityLog.UI
             
             if (menuPanel != null)
             {
-                menuPanel.SetActive(isMenuVisible);
+                UpdateMenuVisibility();
                 
                 if (isMenuVisible)
                 {
-                    Debug.Log($"[{Constants.LOG_TAG}] RecordingMenuController: Menu opened - menuPanel active: {menuPanel.activeSelf}, activeInHierarchy: {menuPanel.activeInHierarchy}");
+                    Debug.Log($"[{Constants.LOG_TAG}] RecordingMenuController: Menu opened");
                     
                     // Position menu in front of player when opening
                     if (menuPositioner != null)
@@ -76,6 +85,16 @@ namespace RealityLog.UI
                         menuPositioner.PositionAway();
                     }
                 }
+            }
+        }
+
+        private void UpdateMenuVisibility()
+        {
+            if (menuCanvasGroup != null)
+            {
+                menuCanvasGroup.alpha = isMenuVisible ? 1f : 0f;
+                menuCanvasGroup.interactable = isMenuVisible;
+                menuCanvasGroup.blocksRaycasts = isMenuVisible;
             }
         }
 
