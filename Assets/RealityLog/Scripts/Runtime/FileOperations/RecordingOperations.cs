@@ -183,7 +183,7 @@ namespace RealityLog.FileOperations
         {
             string operationName = isExport ? "Export" : "Compress";
             string sourcePath = Path.Join(Application.persistentDataPath, directoryName);
-            string zipName = $"{directoryName}.qscan";
+            string zipName = $"{directoryName}.zip";
             string zipPath = Path.Join(Application.persistentDataPath, zipName);
 
             // Enable runInBackground to ensure operation continues if headset is removed
@@ -291,7 +291,7 @@ namespace RealityLog.FileOperations
                         {
                             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                             string zipNameWithoutExt = Path.GetFileNameWithoutExtension(zipName);
-                            destZipPath = Path.Join(downloadsBasePath, $"{zipNameWithoutExt}_{timestamp}.qscan");
+                            destZipPath = Path.Join(downloadsBasePath, $"{zipNameWithoutExt}_{timestamp}.zip");
                         }
 
                         // Move zip to downloads
@@ -309,7 +309,7 @@ namespace RealityLog.FileOperations
                 else
                 {
                     Debug.Log($"[{Constants.LOG_TAG}] RecordingOperations: Compressed {directoryName} to {zipPath}");
-                    OnOperationComplete?.Invoke("Compress", true, $"Compressed to {directoryName}.qscan");
+                    OnOperationComplete?.Invoke("Compress", true, $"Compressed to {directoryName}.zip");
                 }
             }
             finally
