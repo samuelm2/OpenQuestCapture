@@ -86,6 +86,7 @@ namespace RealityLog.Depth
                     totalRaycastCount++;
                     
                     // Raycast against live depth buffer
+                    // TODO: Since we already have the depth buffer, we could use it directly instead of raycasting
                     if (environmentRaycastManager.Raycast(ray, out EnvironmentRaycastHit hit, raycastDistance))
                     {
                         float distance = Vector3.Distance(camera.transform.position, hit.point);
@@ -103,7 +104,7 @@ namespace RealityLog.Depth
                             Debug.Log($"[{Constants.LOG_TAG}] Depth Hit - Dist: {distance:F2}m, Pos: {hit.point}");
                             Debug.Log($"[{Constants.LOG_TAG}] Camera Pos: {camera.transform.position}");
                         }
-                        Color pointColor = GetColorFromUV(u, v);
+                        Color pointColor = GetColorFromSurfaceNormal(hit.point, camera.transform.position, hit.normal);
                         // Instantiate point prefab at hit point  
                         GameObject point = Instantiate(pointPrefab, hit.point, Quaternion.identity);
                         point.transform.parent = trackingSpace;
@@ -116,16 +117,38 @@ namespace RealityLog.Depth
             }
         }
 
-        private Color GetColorFromUV(float u, float v)
+
+        private Color GetColorFromSurfaceNormal(Vector3 hitPoint, Vector3 cameraPos, Vector3 surfaceNormal)
         {
-            // Map UV coordinates to HSV color space
-            // U (horizontal 0-1) maps to Hue (full color spectrum)
-            // V (vertical 0-1) maps to Saturation (color intensity)
+            // Calculate view direction (from surface to camera)
+            Vector3 viewDir = (cameraPos - hitPoint).normalized;
             
-            float hue = u; // 0-1 horizontal position gives full rainbow
-            float saturation = 0.7f + 0.3f * v; // Vary saturation based on vertical position
-            float value = 0.9f; // Keep brightness high for visibility
+            // Pick a stable reference direction perpendicular to the normal
+            // Use world-up cross normal, fallback to world-forward if normal is vertical
+            Vector3 referenceDir = Vector3.Cross(surfaceNormal, Vector3.up);
+            if (referenceDir.sqrMagnitude < 0.01f)
+            {
+                referenceDir = Vector3.Cross(surfaceNormal, Vector3.forward);
+            }
             
+            // HUE: Azimuth (rotation around the normal) - shows DIRECTION
+            float angle = Vector3.SignedAngle(referenceDir, viewDir, surfaceNormal);
+            if (angle < 0f) angle += 360f;
+            float hue = angle / 360f;
+            
+            // VALUE: Viewing angle quality - shows QUALITY
+            // Dot product: 1.0 = head-on (perpendicular), 0.0 = grazing (parallel)
+            float dotProduct = Mathf.Abs(Vector3.Dot(viewDir, surfaceNormal));
+            
+            // Invert so grazing = bright, head-on = dark
+            float value = 1.0f - dotProduct;
+            value = Mathf.Lerp(0.3f, 1.0f, value); // Remap: grazing=1.0 (bright), head-on=0.3 (dim)
+            
+            float saturation = 1.0f; // Full saturation for vivid colors
+            
+            // Result: 
+            // - Rainbow HUE shows viewing DIRECTION around surface
+            // - BRIGHTNESS shows viewing QUALITY (bright=grazing/good, dim=head-on/okay)
             return Color.HSVToRGB(hue, saturation, value);
         }
     }
