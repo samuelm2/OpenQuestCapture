@@ -29,28 +29,35 @@ namespace RealityLog.Depth
         [SerializeField] private EnvironmentRaycastManager environmentRaycastManager;
         [SerializeField] private Transform trackingSpace;
         [SerializeField] private Camera camera;
-        [SerializeField] private GameObject pointPrefab;
+        [SerializeField] private ParticleSystem pointCloudParticleSystem;
 
         private int hitCount = 0;
         private int totalRaycastCount = 0;
-        private List<GameObject> spawnedSpheres = new List<GameObject>();
         
         private void Start()
         {
             Debug.Log($"[{Constants.LOG_TAG}] DepthPointCloudRenderer - Started at {captureTimer.TargetCaptureFPS} FPS");
+            
+            if (pointCloudParticleSystem != null)
+            {
+                var main = pointCloudParticleSystem.main;
+                main.simulationSpace = ParticleSystemSimulationSpace.World;
+                main.startSpeed = 0.00001f; // Small non-zero value to prevent culling
+                main.startLifetime = 1000f; // Long lifetime
+                main.maxParticles = 100000;
+            }
+            else
+            {
+                Debug.LogError($"[{Constants.LOG_TAG}] DepthPointCloudRenderer - ParticleSystem not assigned!");
+            }
         }
 
-        private void ClearAllSpheres()
+        public void ClearPointCloud()
         {
-            Debug.Log($"[{Constants.LOG_TAG}] DepthPointCloudRenderer - Clearing {spawnedSpheres.Count} spheres");
-            foreach (GameObject sphere in spawnedSpheres)
+            if (pointCloudParticleSystem != null)
             {
-                if (sphere != null)
-                {
-                    Destroy(sphere);
-                }
+                pointCloudParticleSystem.Clear();
             }
-            spawnedSpheres.Clear();
         }
 
 
@@ -105,13 +112,13 @@ namespace RealityLog.Depth
                             Debug.Log($"[{Constants.LOG_TAG}] Camera Pos: {camera.transform.position}");
                         }
                         Color pointColor = GetColorFromSurfaceNormal(hit.point, camera.transform.position, hit.normal);
-                        // Instantiate point prefab at hit point  
-                        GameObject point = Instantiate(pointPrefab, hit.point, Quaternion.identity);
-                        point.transform.parent = trackingSpace;
-                        point.GetComponent<MeshRenderer>().material.color = pointColor;
                         
-                        spawnedSpheres.Add(point);
-                        
+                        // Emit particle
+                        var emitParams = new ParticleSystem.EmitParams();
+                        emitParams.position = hit.point;
+                        emitParams.startColor = pointColor;
+                        emitParams.startSize = 0.01f; // Adjust size as needed
+                        pointCloudParticleSystem.Emit(emitParams, 1);
                     }
                 }
             }
@@ -140,15 +147,15 @@ namespace RealityLog.Depth
             // Dot product: 1.0 = head-on (perpendicular), 0.0 = grazing (parallel)
             float dotProduct = Mathf.Abs(Vector3.Dot(viewDir, surfaceNormal));
             
-            // Invert so grazing = bright, head-on = dark
-            float value = 1.0f - dotProduct;
-            value = Mathf.Lerp(0.3f, 1.0f, value); // Remap: grazing=1.0 (bright), head-on=0.3 (dim)
+            // Saturation: 0.0 = head-on (white), 1.0 = grazing (vivid)
+            float saturation = 1.0f - dotProduct;
             
-            float saturation = 1.0f; // Full saturation for vivid colors
+            // Value: Always bright for visibility
+            float value = 1.0f;
             
             // Result: 
             // - Rainbow HUE shows viewing DIRECTION around surface
-            // - BRIGHTNESS shows viewing QUALITY (bright=grazing/good, dim=head-on/okay)
+            // - SATURATION shows viewing QUALITY (White=head-on/good, Vivid=grazing/poor)
             return Color.HSVToRGB(hue, saturation, value);
         }
     }
