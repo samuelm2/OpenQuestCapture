@@ -20,7 +20,7 @@ MonoBehaviour:
   - AssemblyName: Meta.XR.MultiplayerBlocks.Shared
     DebugTypes:
     - Meta.XR.MultiplayerBlocks.Shared.CustomMatchmaking
-  immersiveDebuggerEnabled: 0
+  immersiveDebuggerEnabled: 1
   immersiveDebuggerDisplayAtStartup: 1
   enableOnlyInDebugBuild: 0
   showInspectors: 0
@@ -39,10 +39,11 @@ MonoBehaviour:
   meshRendererLayer: 21
   overlayDepth: 10
   useOverlay: 1
-  inspectedDataEnabled: 0101
+  inspectedDataEnabled: 010101
   inspectedDataAssets:
   - {fileID: 11400000, guid: 7d2b5c7a7c5e53542ab61e3e1f5a2785, type: 2}
   - {fileID: 11400000, guid: 168f7a776bb65884397aab8376e40c7d, type: 2}
+  - {fileID: 11400000, guid: 77088e58ea680884d9b11e7455ce0456, type: 2}
   useCustomIntegrationConfig: 0
   customIntegrationConfigClassName: 
   hierarchyViewShowsPrivateMembers: 0

@@ -1330,6 +1330,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_ClearFlags
       value: 2
       objectReference: {fileID: 0}
@@ -1367,6 +1371,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: expandMixedRealityCapturePropertySheet
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20000010189485334, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20000012175207052, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2615,12 +2627,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: RealityLog.Depth::RealityLog.Depth.DepthPointCloudRenderer
   gridWidth: 8
   gridHeight: 6
+  minRaycastDistance: 0.25
   raycastDistance: 10
   pointSize: 0.02
   pointColor: {r: 0, g: 1, b: 0, a: 1}
   showDebugLines: 1
   captureTimer: {fileID: 1964602098}
   environmentRaycastManager: {fileID: 1104910061}
+  trackingSpace: {fileID: 678640233}
+  camera: {fileID: 678640246}
+  pointPrefab: {fileID: 7230553871127363701, guid: 0ada514fcc96d5144ba207ccee1db0a9, type: 3}
 --- !u!114 &1104910061
 MonoBehaviour:
   m_ObjectHideFlags: 0
