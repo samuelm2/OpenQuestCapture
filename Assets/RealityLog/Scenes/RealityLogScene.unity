@@ -2520,6 +2520,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1104910058}
   - component: {fileID: 1104910059}
+  - component: {fileID: 1104910060}
+  - component: {fileID: 1104910061}
   m_Layer: 0
   m_Name: RealityLog
   m_TagString: Untagged
@@ -2599,6 +2601,39 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1104910060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104910057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b89c4b9f7079684ca310b634dc8e409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RealityLog.Depth::RealityLog.Depth.DepthPointCloudRenderer
+  gridWidth: 8
+  gridHeight: 6
+  raycastDistance: 10
+  pointSize: 0.02
+  pointColor: {r: 0, g: 1, b: 0, a: 1}
+  showDebugLines: 1
+  captureTimer: {fileID: 1964602098}
+  environmentRaycastManager: {fileID: 1104910061}
+--- !u!114 &1104910061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104910057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d8affdff7ba47d892cc734baac9ac71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: meta.xr.mrutilitykit::Meta.XR.EnvironmentRaycastManager
+  CustomTrackingSpace: {fileID: 0}
 --- !u!1 &1142010763
 GameObject:
   m_ObjectHideFlags: 0
