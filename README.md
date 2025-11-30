@@ -1,8 +1,5 @@
-# QuestRealityCapture
+# OpenQuestCapture
 
-<p align="center">
-  <img src="docs/overview.png" alt="QuestRealityCapture" width="320"/>
-</p>
 
 **Capture and store real-world data on Meta Quest 3 or 3s, including HMD/controller poses, stereo passthrough images, camera metadata, and depth maps.**
 
@@ -10,7 +7,7 @@
 
 ## 📖 Overview
 
-`QuestRealityCapture` is a Unity-based data logging app for Meta Quest 3. It captures and stores synchronized real-world information such as headset and controller poses, images from both passthrough cameras, camera characteristics, and depth data, organized per session.
+`OpenQuestCapture` is a Unity-based data logging app for Meta Quest 3. It captures and stores synchronized real-world information such as headset and controller poses, images from both passthrough cameras, camera characteristics, and depth data, organized per session.
 
 For **data parsing, visualization, and reconstruction**, refer to the companion project:
 **[Meta Quest 3D Reconstruction](https://github.com/samuelm2/quest-3d-reconstruction)**
@@ -129,12 +126,10 @@ To convert raw depth maps into linear or 3D form, refer to the companion project
 
 ### For End Users
 
-1. Download the APK from [GitHub Releases](https://github.com/t-34400/QuestRealityCapture/releases)
-2. Install with ADB:
+> [!NOTE]
+> Releases are not yet available. Please build from source or check back later.
 
-   ```bash
-   adb install QuestRealityCapture.apk
-   ```
+
 ## 🎮 Usage
 
 ### Recording & Management
@@ -158,7 +153,7 @@ To convert raw depth maps into linear or 3D form, refer to the companion project
 
 ## ☁️ Cloud Processing (Recommended)
 
-For the easiest workflow, you can upload your exported `.zip` files directly to our cloud processing service:
+For the easiest workflow, you can upload your exported `.zip` files directly to the vid2scene cloud processing service:
 
 **[vid2scene.com/upload/quest](https://vid2scene.com/upload/quest)**
 
@@ -202,10 +197,9 @@ Once in colmap format, the reconstruction can be passed into various Gaussian Sp
 
 ## 🛠 Environment
 
-* Unity **6000.0.30f1**
+* Unity **6000.2.9f1**
 * Meta OpenXR SDK
 * Device: Meta Quest 3 or 3s only
-* Default capture frame rate: **3 FPS**
 
 ---
 
