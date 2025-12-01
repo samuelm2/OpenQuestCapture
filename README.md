@@ -3,6 +3,10 @@
 
 **Capture and store real-world data on Meta Quest 3 or 3s, including HMD/controller poses, stereo passthrough images, camera metadata, and depth maps.**
 
+
+![Demo](docs/demo.gif)
+
+
 ---
 
 ## 📖 Overview
