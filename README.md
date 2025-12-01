@@ -29,11 +29,33 @@ This includes:
 * Saves **depth maps** and **depth descriptors** from both cameras
 * **Synchronized capture** with configurable frame rate for depth and camera images (default: 3 FPS)
 * **Perfect timestamp alignment** between camera images and depth maps
+* **Real-time Depth Point Cloud Visualization**:
+  * Visualizes depth coverage using a particle system.
+  * **Color-coded feedback**: Different colors indicate different angles at which the point was captured. White indicates head-on coverage, while vivid colors indicate grazing angles.
 * Automatically organizes logs into timestamped folders on internal storage
 
+
+### Step-by-Step Guide
+
+1. **Install the app**: Sideload the app from the APK file in the Releases section of this repository. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading.
+2. **Start recording**: Launch the app and press the Menu button on the left controller to start a capture session.
+3. **Stop recording**: To stop, press the left controller's Menu button again.
+4. **Move the data from your Quest to your computer**: The data is stored on the Quest's internal storage. You can move it to your computer using a USB cable by connecting the Quest to your computer and using Windows File Explorer. The data is stored in the `/Quest 3/Internal Shared Storage/data/com.samusynth.OpenQuestCapture/files` directory.
+Or, you can use press the Y button on the left controller to toggle the Recording Menu. Select "Export Data" to export the data to a zip file in the Quest 3 Download folder which can be uploaded to Google Drive or other cloud storage services. Note: Sometimes you may have to restart the headset for the file to show up in the Download folder. This is an active bug.
+5. **Reconstruct the scene**: Use the companion project [Meta Quest 3D Reconstruction](https://github.com/samuelm2/quest-3d-reconstruction) to reconstruct a COLMAP sparse point cloud from the captured data. Or, if you prefer a cloud-based, end-to-end solution, you can go to [vid2scene.com/upload/quest](https://vid2scene.com/upload/quest) and upload the Quest raw data zip file to create a 3DGS reconstruction on the cloud.
+
+### 📸 How to take a good capture
+
+To ensure the best possible 3D reconstruction results:
+
+1.  **Lighting**: Ensure the environment is well-lit and consistent. Avoid extreme shadows or blinding lights.
+2.  **Coverage**: Use the **Depth Point Cloud Visualization** to verify you have covered all surfaces.
+    *   The point visualization point color is determined by the angle at which the point was captured. White indicates head-on coverage, while vivid colors different indicate grazing angles. For best capture, try to make sure the surface has points with many different colors. This indicates it has been captured from many different angles. 
+    *   Note: the point cloud visualization is for reference only. In reality, scenes are reconstructed from thousands more points than what is visible in the visualization.
+3.  **Movement**: Move slowly and steadily. Avoid rapid head movements which can cause motion blur.
+4.  **How long**: From my testing, the best captures usually are within the 1 to 3 minute range.
+
 ---
-
-
 
 ## 🧾 Data Structure
 
@@ -143,7 +165,7 @@ To convert raw depth maps into linear or 3D form, refer to the companion project
    - Press the **Y button** on the left controller to toggle the **Recording Menu**.
    - This menu allows you to:
      - **View** a list of all recorded sessions.
-     - **Export** sessions to a zip file (saved to `.../files/Export/`).
+     - **Export** sessions to a zip file (saved directly to the Quest Downloads folder: `/Download/Export/`).
      - **Delete** unwanted sessions to free up space.
 
 > [!NOTE]
@@ -219,4 +241,8 @@ This project uses Meta’s OpenXR SDK — please ensure compliance with its lice
 
 ---
 
-## 📌 TODO
+## 📌 Call for Contributions
+
+This project is in its early stages and is still in active development. If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+
+One area improvment is the export process. Currently it can take several minutes to export a session. It would be great to have a faster way to do this.
