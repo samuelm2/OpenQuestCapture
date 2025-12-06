@@ -51,7 +51,7 @@ This includes:
 ### Quick Start Guide
 
 1. **Install the app**: Sideload the app from the APK file in the Releases section of this repository. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading.
-2. **Enable permissions**: **When you first launch the app, make sure to check "Enable Headset Cameras" when the permissions are asked for.**
+2. **!!! IMPORTANT !!! Enable permissions**: **When you first launch the app, make sure to check "Enable Headset Cameras" when the permissions are asked for.**
 3. **Start recording**: Launch the app and press the Menu button on the left controller to start a capture session.
 4. **Stop recording**: To stop, press the left controller's Menu button again.
 5. **Move the data from your Quest to your computer**: The data is stored on the Quest's internal storage. You can move it to your computer using a USB cable by connecting the Quest to your computer and using Windows File Explorer. The data is stored in the `/Quest 3/Internal Shared Storage/data/com.samusynth.OpenQuestCapture/files` directory.
