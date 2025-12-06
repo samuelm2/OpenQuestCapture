@@ -116,6 +116,10 @@ namespace RealityLog.FileOperations
 
                 // Move directory
                 Directory.Move(sourcePath, destPath);
+                
+                // Trigger media scan so file appears in Quest Files app immediately
+                ScanDirectory(destPath);
+                
                 Debug.Log($"[{Constants.LOG_TAG}] RecordingOperations: Moved {directoryName} to Downloads");
                 OnOperationComplete?.Invoke("MoveToDownloads", true, $"Moved to Downloads: {Path.GetFileName(destPath)}");
             }
@@ -297,8 +301,11 @@ namespace RealityLog.FileOperations
                         // Move zip to downloads
                         File.Move(zipPath, destZipPath);
                         
+                        // Trigger media scan so file appears in Quest Files app immediately
+                        ScanFile(destZipPath);
+                        
                         Debug.Log($"[{Constants.LOG_TAG}] RecordingOperations: Exported {directoryName} to {destZipPath}");
-                        OnOperationComplete?.Invoke("Export", true, $"Exported to Downloads: {Path.GetFileName(destZipPath)}. You may need to restart your headset to see the zip file show up in the Downloads folder.");
+                        OnOperationComplete?.Invoke("Export", true, $"Exported to Downloads: {Path.GetFileName(destZipPath)}");
                     }
                     catch (Exception e)
                     {
@@ -358,6 +365,62 @@ namespace RealityLog.FileOperations
 #else
             // For editor/testing, use a local downloads folder
             return Path.Join(Application.persistentDataPath, "Downloads");
+#endif
+        }
+
+        /// <summary>
+        /// Notify Android's MediaStore about a new file so it appears immediately in file browsers.
+        /// </summary>
+        private void ScanFile(string filePath)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            try
+            {
+                using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext"))
+                using (AndroidJavaClass mediaScanner = new AndroidJavaClass("android.media.MediaScannerConnection"))
+                {
+                    mediaScanner.CallStatic("scanFile", context, new string[] { filePath }, null, null);
+                }
+                
+                Debug.Log($"[{Constants.LOG_TAG}] Triggered media scan for: {filePath}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[{Constants.LOG_TAG}] Failed to trigger media scan: {e.Message}");
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Notify Android's MediaStore about all files in a directory.
+        /// </summary>
+        private void ScanDirectory(string directoryPath)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            try
+            {
+                // Get all files in directory recursively
+                string[] files = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
+                
+                if (files.Length == 0)
+                    return;
+
+                using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext"))
+                using (AndroidJavaClass mediaScanner = new AndroidJavaClass("android.media.MediaScannerConnection"))
+                {
+                    mediaScanner.CallStatic("scanFile", context, files, null, null);
+                }
+                
+                Debug.Log($"[{Constants.LOG_TAG}] Triggered media scan for {files.Length} files in: {directoryPath}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[{Constants.LOG_TAG}] Failed to trigger media scan for directory: {e.Message}");
+            }
 #endif
         }
     }
