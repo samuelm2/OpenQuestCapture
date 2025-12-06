@@ -51,11 +51,12 @@ This includes:
 ### Quick Start Guide
 
 1. **Install the app**: Sideload the app from the APK file in the Releases section of this repository. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading.
-2. **Start recording**: Launch the app and press the Menu button on the left controller to start a capture session.
-3. **Stop recording**: To stop, press the left controller's Menu button again.
-4. **Move the data from your Quest to your computer**: The data is stored on the Quest's internal storage. You can move it to your computer using a USB cable by connecting the Quest to your computer and using Windows File Explorer. The data is stored in the `/Quest 3/Internal Shared Storage/data/com.samusynth.OpenQuestCapture/files` directory.
+2. **Enable permissions**: **When you first launch the app, make sure to check "Enable Headset Cameras" when the permissions are asked for.**
+3. **Start recording**: Launch the app and press the Menu button on the left controller to start a capture session.
+4. **Stop recording**: To stop, press the left controller's Menu button again.
+5. **Move the data from your Quest to your computer**: The data is stored on the Quest's internal storage. You can move it to your computer using a USB cable by connecting the Quest to your computer and using Windows File Explorer. The data is stored in the `/Quest 3/Internal Shared Storage/data/com.samusynth.OpenQuestCapture/files` directory.
 Or, you can use press the Y button on the left controller to toggle the Recording Menu. Select "Export Data" to export the data to a zip file in the Quest 3 Download folder which can be uploaded to Google Drive or other cloud storage services.
-5. **Reconstruct the scene**: Use the companion project [Meta Quest 3D Reconstruction](https://github.com/samuelm2/quest-3d-reconstruction) to reconstruct a COLMAP sparse point cloud from the captured data. Or, if you prefer a cloud-based, end-to-end solution, you can go to [vid2scene.com/upload/quest](https://vid2scene.com/upload/quest) and upload the Quest raw data zip file to create a 3DGS reconstruction on the cloud.
+6. **Reconstruct the scene**: Use the companion project [Meta Quest 3D Reconstruction](https://github.com/samuelm2/quest-3d-reconstruction) to reconstruct a COLMAP sparse point cloud from the captured data. Or, if you prefer a cloud-based, end-to-end solution, you can go to [vid2scene.com/upload/quest](https://vid2scene.com/upload/quest) and upload the Quest raw data zip file to create a 3DGS reconstruction on the cloud.
 
 ### 📸 How to take a good capture
 
