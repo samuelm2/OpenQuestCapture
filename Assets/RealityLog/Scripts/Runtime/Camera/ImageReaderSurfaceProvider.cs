@@ -58,7 +58,7 @@ namespace RealityLog.Camera
                 bufferPoolSize
             );
 
-            Debug.Log($"[ImageReaderSurfaceProvider] Camera initialized - will respond to capture signals from CaptureTimer");
+            Debug.Log($"[ImageReaderSurfaceProvider] Camera initialized -- will respond to capture signals from CaptureTimer");
 
             return currentInstance;
         }

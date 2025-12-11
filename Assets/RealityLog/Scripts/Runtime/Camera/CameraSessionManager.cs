@@ -21,6 +21,9 @@ namespace RealityLog.Camera
         [SerializeField] private CameraUseCase useCase = CameraUseCase.STILL_CAPTURE;
 
         public AndroidJavaObject? SessionManagerJavaInstance { get; private set; }
+        
+        private Coroutine? resumeCoroutine;
+        private const float RESUME_DELAY = 0.5f; // Wait 0.5s before reopening to avoid rapid pause/resume cycles
 
 # if UNITY_ANDROID
         private void OnEnable()
@@ -42,6 +45,52 @@ namespace RealityLog.Camera
         {
             DestroyInstance();
             cameraPermissionManager.CameraManagerInstantiated -= OnCameraManagerInstantiated;
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus)
+            {
+                // App is going to background/sleep - close camera to release resources
+                // Cancel any pending resume operations
+                if (resumeCoroutine != null)
+                {
+                    StopCoroutine(resumeCoroutine);
+                    resumeCoroutine = null;
+                }
+                
+                Debug.Log($"[{Constants.LOG_TAG}] App pausing - closing camera session");
+                DestroyInstance();
+            }
+            else
+            {
+                // App is resuming - delay camera reopening to avoid rapid pause/resume cycles
+                // This is common during VR app startup
+                if (resumeCoroutine != null)
+                {
+                    StopCoroutine(resumeCoroutine);
+                }
+                resumeCoroutine = StartCoroutine(DelayedResume());
+            }
+        }
+        
+        private System.Collections.IEnumerator DelayedResume()
+        {
+            Debug.Log($"[{Constants.LOG_TAG}] App resuming - waiting {RESUME_DELAY}s before reopening camera...");
+            yield return new WaitForSeconds(RESUME_DELAY);
+            
+            Debug.Log($"[{Constants.LOG_TAG}] Reopening camera session");
+            var cameraManagerJavaInstance = cameraPermissionManager.CameraManagerJavaInstance;
+            if (cameraManagerJavaInstance != null)
+            {
+                Instantiate(cameraManagerJavaInstance);
+            }
+            else
+            {
+                Debug.LogWarning($"[{Constants.LOG_TAG}] Cannot reopen camera -- CameraManager not available");
+            }
+            
+            resumeCoroutine = null;
         }
 
         private void OnCameraManagerInstantiated(AndroidJavaObject cameraManagerJavaInstance)
@@ -91,17 +140,6 @@ namespace RealityLog.Camera
             }
             SessionManagerJavaInstance.Call(SET_CAPTURE_TEMPLATE_METHOD_NAME, useCase.ToString());
             
-            // Try to set target FPS range if the method exists
-            try
-            {
-                SessionManagerJavaInstance.Call("setTargetFpsRange", 3, 3);
-                Debug.Log($"[{Constants.LOG_TAG}] Set camera FPS to 3");
-            }
-            catch (AndroidJavaException e)
-            {
-                Debug.LogWarning($"[{Constants.LOG_TAG}] setTargetFpsRange not available: {e.Message}");
-            }
-
             using (AndroidJavaClass unityPlayerClazz = new AndroidJavaClass(Constants.UNITY_PLAYER_CLASS_NAME))
             using (AndroidJavaObject currentActivity = unityPlayerClazz.GetStatic<AndroidJavaObject>(Constants.UNITY_PLAYER_CURRENT_ACTIVITY_VARIABLE_NAME))
             {
