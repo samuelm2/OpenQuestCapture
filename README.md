@@ -7,7 +7,7 @@
 
 ![Demo](docs/demo.gif)
 
-**[Watch the full pipeline in action (45 seconds)](https://www.youtube.com/watch?v=OLoXAgbI8XA)** - See how data is captured on Quest and reconstructed into a 3D scene. *(Thank you to EggMan28 for the demo!)*
+**[Watch the full pipeline in action](https://www.youtube.com/watch?v=brcnfMmwRq8)** - See how data is captured on Quest and reconstructed into a 3D scene. *(Thank you to EggMan28 for the demo!)*
 
 ---
 
@@ -55,7 +55,7 @@ This includes:
 
 ### Quick Start Guide
 
-1. **Install the app**: Sideload the app from the APK file in the Releases section of this repository. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading.
+1. **Install the app**: Download from [SideQuest](https://sidequestvr.com/app/45514) or sideload the APK file from the Releases section of this repository. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading.
 2. **!!! IMPORTANT !!! Enable permissions**: **When you first launch the app, make sure to check "Enable Headset Cameras" when the permissions are asked for.**
 3. **Start recording**: Launch the app and press the Menu button on the left controller to start a capture session.
 4. **Stop recording**: To stop, press the left controller's Menu button again.
@@ -167,7 +167,13 @@ To convert raw depth maps into linear or 3D form, refer to the companion project
 
 ### For End Users
 
-Side-loading is required to install this app on the Quest. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading. The APK can be found in the [Releases](https://github.com/samuelm2/OpenQuestCapture/releases) section of this repository.
+**Option 1: Install via SideQuest**
+
+Download and install directly from [SideQuest](https://sidequestvr.com/app/45514).
+
+**Option 2: Manual Sideloading**
+
+Side-loading is required to install this app on the Quest. [This video](https://www.youtube.com/watch?v=bsC805t63-E) has a good guide on how to set up sideloading. The most up to date APK can be found in the [Releases](https://github.com/samuelm2/OpenQuestCapture/releases) section of this repository.
 
 
 ## 🎮 Usage
