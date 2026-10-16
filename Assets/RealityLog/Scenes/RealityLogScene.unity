@@ -7510,6 +7510,7 @@ GameObject:
   - component: {fileID: 1104910059}
   - component: {fileID: 1104910060}
   - component: {fileID: 1104910061}
+  - component: {fileID: 1104910062}
   m_Layer: 0
   m_Name: RealityLog
   m_TagString: Untagged
@@ -7613,8 +7614,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b89c4b9f7079684ca310b634dc8e409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: RealityLog.Depth::RealityLog.Depth.DepthPointCloudRenderer
-  gridWidth: 8
-  gridHeight: 6
+  gridWidth: 16
+  gridHeight: 12
   minRaycastDistance: 0.25
   raycastDistance: 10
   showDebugLines: 1
@@ -7623,6 +7624,23 @@ MonoBehaviour:
   trackingSpace: {fileID: 678640233}
   camera: {fileID: 678640246}
   pointCloudParticleSystem: {fileID: 476427109}
+  coverageMode: 1
+  voxelSize: 0.1
+  maxVoxels: 50000
+  maxSampleDistance: 6
+  coverageRefreshHz: 3
+  voxelPointSize: 0.025
+  redColor: {r: 1, g: 0.2, b: 0.15, a: 0.9}
+  amberColor: {r: 1, g: 0.72, b: 0.05, a: 0.9}
+  greenColor: {r: 0.2, g: 0.95, b: 0.3, a: 0.9}
+  fadeStartDistance: 2.5
+  fadeEndDistance: 5
+  carveFloaters: 1
+  carveMinFrames: 2
+  carveWeakSupportSamples: 5
+  carveStrongRatio: 3
+  carveMarginMeters: 0.15
+  carveMarginFraction: 0.02
 --- !u!114 &1104910061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7636,6 +7654,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: meta.xr.mrutilitykit::Meta.XR.EnvironmentRaycastManager
   CustomTrackingSpace: {fileID: 0}
+--- !u!114 &1104910062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104910057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4b2c7d1f5a4a6e9c3d0b2f7a1e5c63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RealityLog.UI::RealityLog.UI.CoverageHud
+  pointCloudRenderer: {fileID: 1104910060}
+  recordingManager: {fileID: 1104910059}
+  cameraTransform: {fileID: 678640245}
+  templateText: {fileID: 1375737370}
+  localOffset: {x: 0, y: -0.21, z: 1}
+  fontSize: 2.6
+  labelScale: 0.1
+  updateInterval: 0.25
+  windowSeconds: 4
+  rotationThresholdDegrees: 60
+  translationThresholdMeters: 0.15
+  warningHoldSeconds: 2
 --- !u!1 &1142010763
 GameObject:
   m_ObjectHideFlags: 0
