@@ -6968,6 +6968,8 @@ MonoBehaviour:
   cameraMetaDataFileName: right_camera_characteristics.json
   formatInfoFileName: right_camera_image_format.json
   bufferPoolSize: 5
+  compressFrames: 1
+  compressionLevel: 3
   captureTimer: {fileID: 1964602098}
 --- !u!114 &800648184
 MonoBehaviour:
@@ -7297,6 +7299,8 @@ MonoBehaviour:
   cameraMetaDataFileName: left_camera_characteristics.json
   formatInfoFileName: left_camera_image_format.json
   bufferPoolSize: 5
+  compressFrames: 1
+  compressionLevel: 3
   captureTimer: {fileID: 1964602098}
 --- !u!114 &918867451
 MonoBehaviour:

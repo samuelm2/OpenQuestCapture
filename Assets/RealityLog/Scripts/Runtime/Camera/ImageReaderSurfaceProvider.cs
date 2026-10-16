@@ -15,12 +15,19 @@ namespace RealityLog.Camera
         private const string UPDATE_DIRECTORY_PATHS_METHOD_NAME = "updateDirectoryPaths";
         private const string CAPTURE_NEXT_FRAME_METHOD_NAME = "captureNextFrame";
         private const string CLOSE_METHOD_NAME = "close";
+        private const string SET_COMPRESSION_METHOD_NAME = "setCompression";
 
         [SerializeField] private string dataDirectoryName = string.Empty;
         [SerializeField] private string imageSubdirName = "left_camera";
         [SerializeField] private string cameraMetaDataFileName = "left_camera_characteristics.json";
         [SerializeField] private string formatInfoFileName = "left_camera_image_format.json";
         [SerializeField] private int bufferPoolSize = 5;
+        [Header("Frame compression")]
+        [Tooltip("Store frames as <unixMs>.yuv.zst (zstd of the raw YUV bytes) instead of raw .yuv. Roughly 37% of raw at level 3.")]
+        [SerializeField] private bool compressFrames = true;
+        [Tooltip("zstd level 1..19. 3 is the default; the library drops to 1 by itself if level 3 averages over 100 ms per frame.")]
+        [Range(1, 19)]
+        [SerializeField] private int compressionLevel = 3;
         [Header("Synchronized Capture")]
         [Tooltip("Required: Reference to CaptureTimer for FPS-based capture timing.")]
         [SerializeField] private CaptureTimer captureTimer = default!;
@@ -55,12 +62,25 @@ namespace RealityLog.Camera
                 size.height,
                 imageFileDirPath,
                 formatInfoFilePath,
-                bufferPoolSize
+                bufferPoolSize,
+                compressFrames,
+                compressionLevel
             );
 
-            Debug.Log($"[ImageReaderSurfaceProvider] Camera initialized -- will respond to capture signals from CaptureTimer");
+            Debug.Log($"[ImageReaderSurfaceProvider] Camera initialized -- will respond to capture signals from CaptureTimer; " +
+                      $"frame compression {(compressFrames ? $"zstd level {compressionLevel}" : "off")}");
 
             return currentInstance;
+        }
+
+        /// <summary>
+        /// Changes frame compression at runtime; applies to frames captured from now on.
+        /// </summary>
+        public void SetCompression(bool enabled, int level)
+        {
+            compressFrames = enabled;
+            compressionLevel = Mathf.Clamp(level, 1, 19);
+            currentInstance?.Call(SET_COMPRESSION_METHOD_NAME, compressFrames, compressionLevel);
         }
 
         /// <summary>
